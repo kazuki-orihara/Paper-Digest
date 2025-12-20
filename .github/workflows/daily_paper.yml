@@ -1,0 +1,34 @@
+name: Daily Paper Notifier
+
+on:
+  schedule:
+    # 毎週　月曜日 日本時間の朝8時 (UTC 23:00) に実行
+    - cron: '0 23 * * 0'
+  workflow_dispatch: # GitHub画面から手動実行ボタンを押せるようにする
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+        
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt
+        
+    - name: Run main script
+      env:
+        GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        DISCORD_WEBHOOK_URL_INT: ${{ secrets.DISCORD_WEBHOOK_URL_INT }}
+        DISCORD_WEBHOOK_URL_TOP: ${{ secrets.DISCORD_WEBHOOK_URL_TOP }}
+        DISCORD_WEBHOOK_URL_ARXIV: ${{ secrets.DISCORD_WEBHOOK_URL_ARXIV }}
+        DISCORD_WEBHOOK_URL_BIOPHYSICS: ${{ secrets.DISCORD_WEBHOOK_URL_BIOPHYSICS }}
+      # srcフォルダの外から実行するように指定
+      run: python src/main.py
