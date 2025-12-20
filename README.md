@@ -8,7 +8,7 @@ Automate your daily literature review and ensure you never miss important resear
 
 Automated Search: Supports both PubMed and ArXiv.
 
-AI Summarization: Uses Gemini 1.5 Flash to generate professional summaries from abstracts.
+AI Summarization: Uses Gemini 2.5 Flash to generate professional summaries from abstracts.
 
 Output is structured into 4 key sections: Background, Methods, Results, and Significance.
 

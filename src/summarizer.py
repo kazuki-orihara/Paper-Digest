@@ -10,7 +10,7 @@ def summarize_abstract(abstract_text):
     genai.configure(api_key=api_key)
     
     # Use a stable model version
-    model = genai.GenerativeModel('gemini-1.5-flash')
+    model = genai.GenerativeModel('gemini-2.5-flash')
 
     # Safety settings to prevent false positives on scientific content
     # (e.g., discussions on viruses, toxicity, or cellular death)

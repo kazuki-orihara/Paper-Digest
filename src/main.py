@@ -85,7 +85,7 @@ def load_config_from_file(filepath):
 def main():
     parser = argparse.ArgumentParser(description="Paper Digest: Automated Paper Collector & Summarizer")
     parser.add_argument("--config", default="search_config.txt", help="Path to configuration file")
-    # ▼ 追加: テストモード用のフラグ
+
     parser.add_argument("--test", action="store_true", help="Run in test mode (process only 1 paper per rule)")
     args = parser.parse_args()
 
@@ -118,7 +118,6 @@ def main():
             print(f"No new papers found.")
             continue
 
-        # ▼ 追加: テストモードなら最初の1件だけにする
         if args.test:
             print(f"🧪 Test mode: Limiting results to 1 out of {len(papers)} found.")
             papers = papers[:1]
@@ -150,7 +149,7 @@ def main():
             send_to_discord(paper, summary, webhook_url)
 
             if not args.test and len(papers) > 1:
-                # テストモード以外で、まだ次がある場合のみ待機
+
                 print("Sleeping for 30 seconds...")
                 time.sleep(30)
             

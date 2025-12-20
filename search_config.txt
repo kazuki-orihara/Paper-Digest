@@ -12,4 +12,4 @@
 # ==========================================================
 
 # example
-pubmed | "Nuclear organization" AND "Simulation" | DEFAULT
+pubmed | "nucleosome" | DEFAULT
