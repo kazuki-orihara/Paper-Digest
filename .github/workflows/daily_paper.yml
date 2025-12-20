@@ -2,9 +2,10 @@ name: Daily Paper Notifier
 
 on:
   schedule:
-    # 毎週　月曜日 日本時間の朝8時 (UTC 23:00) に実行
+    # Runs every Monday at 8:00 AM JST (Sunday 23:00 UTC)
     - cron: '0 23 * * 0'
-  workflow_dispatch: # GitHub画面から手動実行ボタンを押せるようにする
+  # Allows manual execution from the GitHub Actions tab
+  workflow_dispatch:
 
 jobs:
   run-script:
@@ -12,10 +13,10 @@ jobs:
     
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: '3.10'
         
@@ -25,10 +26,15 @@ jobs:
         
     - name: Run main script
       env:
+        # === Required Secrets ===
         GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-        DISCORD_WEBHOOK_URL_INT: ${{ secrets.DISCORD_WEBHOOK_URL_INT }}
-        DISCORD_WEBHOOK_URL_TOP: ${{ secrets.DISCORD_WEBHOOK_URL_TOP }}
-        DISCORD_WEBHOOK_URL_ARXIV: ${{ secrets.DISCORD_WEBHOOK_URL_ARXIV }}
-        DISCORD_WEBHOOK_URL_BIOPHYSICS: ${{ secrets.DISCORD_WEBHOOK_URL_BIOPHYSICS }}
-      # srcフォルダの外から実行するように指定
+        DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+
+        # === Optional: Custom Webhooks ===
+        # Extra slots for user customization (e.g., specific labs or fields)
+        DISCORD_WEBHOOK_URL_CUSTOM_1: ${{ secrets.DISCORD_WEBHOOK_URL_CUSTOM_1 }}
+        DISCORD_WEBHOOK_URL_CUSTOM_2: ${{ secrets.DISCORD_WEBHOOK_URL_CUSTOM_2 }}
+
+        ENTREZ_EMAIL: ${{ secrets.ENTREZ_EMAIL }}
+      # Execute the script from the root directory
       run: python src/main.py

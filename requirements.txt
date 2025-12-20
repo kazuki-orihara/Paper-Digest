@@ -1,5 +1,0 @@
-arxiv
-biopython
-google-generativeai
-requests
-python-dotenv

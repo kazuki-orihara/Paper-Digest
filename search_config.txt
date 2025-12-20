@@ -1,0 +1,15 @@
+# ==========================================================
+#  Paper Digest Configuration File
+# ==========================================================
+#
+# Format:
+#   source | query | webhook_type
+#
+# - source: "pubmed" or "arxiv"
+# - query: Search keywords (supports AND, OR, parentheses)
+# - webhook_type: Optional. (DEFAULT, CUSTOM1, CUSTOM2)
+#
+# ==========================================================
+
+# example
+pubmed | "Nuclear organization" AND "Simulation" | DEFAULT

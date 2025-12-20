@@ -1,33 +1,48 @@
-import os
 import google.generativeai as genai
+from google.generativeai.types import HarmCategory, HarmBlockThreshold
+import os
 
-def summarize_abstract(text):
-    """
-    Geminiを使ってアブストラクトを要約する関数
-    """
+def summarize_abstract(abstract_text):
     api_key = os.getenv("GEMINI_API_KEY")
     if not api_key:
-        return "Error: API Key not found."
-
+        return "Error: Gemini API Key is missing."
+        
     genai.configure(api_key=api_key)
-    model = genai.GenerativeModel('gemini-1.5-flash') # 2.5だと20回で制限にかかってしまうため
     
-    prompt = f"""
-    以下の論文のアブストラクトを読み、研究者向けに日本語で要約してください。
-    
-    【制約】
-    ・3つの箇条書き（・を使用）で出力すること。
-    ・専門用語はなるべくそのまま使用すること。
-    ・結論を明確にすること。
+    # Use a stable model version
+    model = genai.GenerativeModel('gemini-1.5-flash')
 
-    またこの論文の新規性や重要なポイントがあれば、要約の最後に追加してください。
+    # Safety settings to prevent false positives on scientific content
+    # (e.g., discussions on viruses, toxicity, or cellular death)
+    safety_settings = {
+        HarmCategory.HARM_CATEGORY_HARASSMENT: HarmBlockThreshold.BLOCK_NONE,
+        HarmCategory.HARM_CATEGORY_HATE_SPEECH: HarmBlockThreshold.BLOCK_NONE,
+        HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT: HarmBlockThreshold.BLOCK_NONE,
+        HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT: HarmBlockThreshold.BLOCK_NONE,
+    }
+
+    # English Prompt for Global Audience
+    # Changed 【 】 to ### for better Markdown compatibility
+    prompt = f"""
+    Please summarize the following research abstract for a professional biologist or researcher.
+    Output the summary in English.
     
-    Abstract:
-    {text}
+    ### Requirements
+    1. **Background & Purpose**: Why was this study conducted?
+    2. **Key Methodology**: What were the notable techniques or approaches?
+    3. **Main Results**: What were the findings? (Include specific values or molecule names if available)
+    4. **Conclusion & Impact**: What is the significance of this study to the field?
+    
+    ### Abstract
+    {abstract_text}
     """
     
     try:
-        response = model.generate_content(prompt)
+        response = model.generate_content(
+            prompt,
+            safety_settings=safety_settings
+        )
         return response.text
     except Exception as e:
-        return f"要約生成エラー: {e}"
+        # Return the error string so main.py can detect "429" or other issues
+        return f"Summary Generation Error: {e}"

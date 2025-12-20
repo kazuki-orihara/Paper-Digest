@@ -1,39 +1,47 @@
 import arxiv
 from datetime import datetime, timedelta, timezone
 
-def search_arxiv(keyword, max_results=10):
+def search_arxiv(query, max_results=30):
     """
-    ArXivから指定キーワードで論文を検索する関数
+    Searches ArXiv for papers matching the query from the last 7 days.
     """
     client = arxiv.Client()
     
-    # 検索クエリの構築（提出順にソート）
+    # Construct search query (Sorted by Submitted Date)
     search = arxiv.Search(
-        query=keyword,
+        query=query,
         max_results=max_results,
         sort_by=arxiv.SortCriterion.SubmittedDate
     )
     
-    # 7日前の日時を計算（UTCタイムゾーン）
+    # Calculate cutoff date (7 days ago) in UTC
     seven_days_ago = datetime.now(timezone.utc) - timedelta(days=7)
 
     papers = []
-    for result in client.results(search):
-            # 【判定】論文の発行日が、7日前より古い場合はスキップ（または終了）
+    
+    try:
+        # Iterate through search results
+        for result in client.results(search):
+            
+            # Optimization: Since results are sorted by date (newest first),
+            # once we hit a paper older than 7 days, we can stop the loop entirely.
             if result.published < seven_days_ago:
-                # ArXivは新しい順に出てくるので、古いのが出たらそこで打ち切っても良いが
-                #念のためcontinueにしておく
-                continue
+                break 
 
             journal_name = result.journal_ref if result.journal_ref else "ArXiv Preprint"
-            # 必要情報を辞書にまとめる
+            
+            # Format data into a dictionary
             papers.append({
                 "source": "ArXiv",
                 "journal": journal_name,
                 "title": result.title,
                 "url": result.entry_id,
-                "abstract": result.summary.replace("\n", " "), # 改行を除去
+                "abstract": result.summary.replace("\n", " "), # Remove newlines for cleaner summary
                 "date": result.published.strftime('%Y-%m-%d')
             })
-        
-    return papers
+            
+        return papers
+
+    except Exception as e:
+        print(f"❌ ArXiv Search Error: {e}")
+        return []

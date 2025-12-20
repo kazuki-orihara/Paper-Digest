@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  paper-digest:
+    build: .
+    container_name: paper-digest-bot
+    
+    # Load environment variables (API Key, Webhook URL) from the host .env file
+    env_file:
+      - .env
+      
+    # Mount the config file so you can edit search rules without rebuilding the image
+    volumes:
+      - ./search_config.txt:/app/search_config.txt
+      
+    # Optional: Override the command to run in test mode
+    # command: python src/main.py --test
