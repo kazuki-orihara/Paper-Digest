@@ -1,7 +1,7 @@
 import arxiv
 from datetime import datetime, timedelta, timezone
 
-def search_arxiv(query, max_results=30):
+def search_arxiv(query, max_results=3):
     """
     Searches ArXiv for papers matching the query from the last 7 days.
     """
