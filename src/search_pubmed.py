@@ -5,7 +5,7 @@ import os
 # (Required by NCBI terms of use)
 Entrez.email = os.getenv("ENTREZ_EMAIL", "paper_digest_bot@example.com")
 
-def search_pubmed(keyword, max_results=10):
+def search_pubmed(keyword, max_results=1):
     """
     Search PubMed for papers matching the keyword within the last 7 days.
     """
