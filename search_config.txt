@@ -13,3 +13,8 @@
 
 # example
 pubmed | "nucleosome" | DEFAULT
+pubmed | "chromatin" | DEFAULT
+pubmed | "polymer" | DEFAULT
+arxiv | "nucleosome" | DEFAULT
+arxiv | "chromatin" | DEFAULT
+arxiv | "polymer" | DEFAULT
