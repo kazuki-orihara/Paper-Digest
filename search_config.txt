@@ -15,6 +15,9 @@
 pubmed | "nucleosome" | DEFAULT
 pubmed | "chromatin" | DEFAULT
 pubmed | "polymer" | DEFAULT
+pubmed | "morphogenesis" | DEFAULT
 arxiv | "nucleosome" | DEFAULT
 arxiv | "chromatin" | DEFAULT
 arxiv | "polymer" | DEFAULT
+arxiv | "activematter" | DEFAULT
+arxiv | "morphogenesis" | DEFAULT
